@@ -1,6 +1,8 @@
 package space.siwawesw.app.gps.fragment
 
 import android.databinding.DataBindingUtil
+import android.databinding.ObservableDouble
+import android.databinding.ObservableFloat
 import android.support.v4.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,15 +17,20 @@ import space.siwawesw.app.gps.model.Location
  */
 class MainActivityFragment : Fragment() {
 
-    lateinit var location: Location
+    lateinit var mLocation: Location
+    private lateinit var binding: FragmentMainBinding
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?,
                               savedInstanceState: Bundle?): View? {
-        val binding: FragmentMainBinding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_main, container, false)
 
-        location = Location(1.0, 1.0, 1f)
-        binding.location = location
+        mLocation = Location(ObservableDouble(1.0), ObservableDouble(1.0), ObservableFloat(1f))
+        binding.location = mLocation
 
         return binding.root
+    }
+
+    fun updateLocationWith(location: android.location.Location) {
+        mLocation.updateWith(location)
     }
 }

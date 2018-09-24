@@ -113,10 +113,11 @@ class MainActivity : AppCompatActivity(), LocationUtil.LocationUtilCallback, Loc
         Log.d(TAG, "onLocationResult")
         val fm: MainActivityFragment = supportFragmentManager.findFragmentById(R.id.fragment) as MainActivityFragment
         for (location in locationResult.locations) {
-            fm.location.updateWith(location)
-            var message = "\n fm.location.latitude: ${fm.location.latitude}"
-            message += "\n fm.location.longitude: ${fm.location.longitude}"
-            message += "\n fm.location.accuracy: ${fm.location.accuracy}"
+            fm.updateLocationWith(location)
+            
+            var message = "\n fm.location.latitude: ${fm.mLocation.latitude.get()}"
+            message += "\n fm.location.longitude: ${fm.mLocation.longitude.get()}"
+            message += "\n fm.location.accuracy: ${fm.mLocation.accuracy.get()}"
             Log.d(TAG, message)
         }
     }

@@ -1,14 +1,16 @@
 package space.siwawesw.app.gps.model
 
+import android.databinding.ObservableDouble
+import android.databinding.ObservableFloat
 import android.location.Location
 
-data class Location (var latitude: Double,
-                     var longitude: Double,
-                     var accuracy: Float) {
+data class Location (var latitude: ObservableDouble,
+                     var longitude: ObservableDouble,
+                     var accuracy: ObservableFloat) {
 
     fun updateWith(location: Location) {
-        latitude = location.latitude
-        longitude = location.longitude
-        accuracy = location.accuracy
+        latitude.set(location.latitude)
+        longitude.set(location.longitude)
+        accuracy.set(location.accuracy)
     }
 }
