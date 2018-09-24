@@ -1,5 +1,6 @@
 package space.siwawesw.app.gps.activity
 
+import android.Manifest
 import android.content.IntentSender
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -16,11 +17,19 @@ import kotlinx.android.synthetic.main.activity_main.*
 import space.siwawesw.app.gps.R
 import space.siwawesw.app.gps.util.LocationUtil
 import java.lang.Exception
+import com.google.android.gms.location.LocationServices
+import android.Manifest.permission
+import android.Manifest.permission.ACCESS_FINE_LOCATION
+import android.support.v4.app.ActivityCompat
+import android.content.pm.PackageManager
+import space.siwawesw.app.gps.fragment.MainActivityFragment
+
 
 class MainActivity : AppCompatActivity(), LocationUtil.LocationUtilCallback, LocationUtil.LocationReceiveCallback {
 
     companion object {
         private const val TAG = "MainActivity"
+        private const val REQUEST_LOCATION = 1011
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,11 +41,8 @@ class MainActivity : AppCompatActivity(), LocationUtil.LocationUtilCallback, Loc
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
 
-            try {
-                LocationUtil.instance.startLocationUpdates()
-            } catch (exception: SecurityException) {
-                Log.d(TAG, "exception: ${exception.localizedMessage}")
-            }
+            requestLocationUpdate()
+
 
         }
 
@@ -65,6 +71,24 @@ class MainActivity : AppCompatActivity(), LocationUtil.LocationUtilCallback, Loc
 
     override fun onPause() {
         super.onPause()
+
+        if (LocationUtil.instance.isRunning)
+            LocationUtil.instance.stopLocationUpdates()
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if (requestCode == REQUEST_LOCATION) {
+            if (grantResults.size == 1 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                Log.d(TAG, "We can now safely use the API we requested access to")
+                // We can now safely use the API we requested access to
+                LocationUtil.instance.startLocationUpdates()
+            } else {
+                // Permission was denied or request was cancelled
+                Log.d(TAG, "Permission was denied or request was cancelled")
+            }
+        }
     }
 
     override fun onLocationSettingSuccess(locationSettingsResponse: Task<LocationSettingsResponse>) {
@@ -72,7 +96,7 @@ class MainActivity : AppCompatActivity(), LocationUtil.LocationUtilCallback, Loc
     }
 
     override fun onLocationSettingFail(exception: Exception) {
-        if (exception is ResolvableApiException){
+        if (exception is ResolvableApiException) {
             // Location settings are not satisfied, but this can be fixed
             // by showing the user a dialog.
             try {
@@ -87,5 +111,25 @@ class MainActivity : AppCompatActivity(), LocationUtil.LocationUtilCallback, Loc
 
     override fun onLocationResult(locationResult: LocationResult) {
         Log.d(TAG, "onLocationResult")
+        val fm: MainActivityFragment = supportFragmentManager.findFragmentById(R.id.fragment) as MainActivityFragment
+        for (location in locationResult.locations) {
+            fm.location.updateWith(location)
+            var message = "\n fm.location.latitude: ${fm.location.latitude}"
+            message += "\n fm.location.longitude: ${fm.location.longitude}"
+            message += "\n fm.location.accuracy: ${fm.location.accuracy}"
+            Log.d(TAG, message)
+        }
+    }
+
+    private fun requestLocationUpdate() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // Check Permissions Now
+            ActivityCompat.requestPermissions(this,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                    REQUEST_LOCATION)
+        } else {
+            // permission has been granted, continue as usual
+            LocationUtil.instance.startLocationUpdates()
+        }
     }
 }
