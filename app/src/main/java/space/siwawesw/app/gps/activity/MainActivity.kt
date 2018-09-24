@@ -8,6 +8,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.tasks.Task
 
@@ -16,7 +17,7 @@ import space.siwawesw.app.gps.R
 import space.siwawesw.app.gps.util.LocationUtil
 import java.lang.Exception
 
-class MainActivity : AppCompatActivity(), LocationUtil.LocationUtilCallback {
+class MainActivity : AppCompatActivity(), LocationUtil.LocationUtilCallback, LocationUtil.LocationReceiveCallback {
 
     companion object {
         private const val TAG = "MainActivity"
@@ -30,14 +31,16 @@ class MainActivity : AppCompatActivity(), LocationUtil.LocationUtilCallback {
         fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show()
+
+            try {
+                LocationUtil.instance.startLocationUpdates()
+            } catch (exception: SecurityException) {
+                Log.d(TAG, "exception: ${exception.localizedMessage}")
+            }
+
         }
 
-        LocationUtil.instance.initService(this, this)
-        Log.d(TAG, "LocationUtil.instance.a: ${LocationUtil.instance.a}")
-        LocationUtil.instance.a++
-        Log.d(TAG, "LocationUtil.instance.a: ${LocationUtil.instance.a}")
-        LocationUtil.instance.a++
-        Log.d(TAG, "LocationUtil.instance.a: ${LocationUtil.instance.a}")
+        LocationUtil.instance.initService(this, this, this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -80,5 +83,9 @@ class MainActivity : AppCompatActivity(), LocationUtil.LocationUtilCallback {
                 // Ignore the error.
             }
         }
+    }
+
+    override fun onLocationResult(locationResult: LocationResult) {
+        Log.d(TAG, "onLocationResult")
     }
 }
