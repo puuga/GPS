@@ -1,16 +1,26 @@
 package space.siwawesw.app.gps.activity
 
+import android.content.IntentSender
 import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.support.v7.app.AppCompatActivity
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
+import com.google.android.gms.common.api.ResolvableApiException
+import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.tasks.Task
 
 import kotlinx.android.synthetic.main.activity_main.*
 import space.siwawesw.app.gps.R
 import space.siwawesw.app.gps.util.LocationUtil
+import java.lang.Exception
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LocationUtil.LocationUtilCallback {
+
+    companion object {
+        private const val TAG = "MainActivity"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -22,7 +32,12 @@ class MainActivity : AppCompatActivity() {
                     .setAction("Action", null).show()
         }
 
-        LocationUtil
+        LocationUtil.instance.initService(this, this)
+        Log.d(TAG, "LocationUtil.instance.a: ${LocationUtil.instance.a}")
+        LocationUtil.instance.a++
+        Log.d(TAG, "LocationUtil.instance.a: ${LocationUtil.instance.a}")
+        LocationUtil.instance.a++
+        Log.d(TAG, "LocationUtil.instance.a: ${LocationUtil.instance.a}")
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -47,5 +62,23 @@ class MainActivity : AppCompatActivity() {
 
     override fun onPause() {
         super.onPause()
+    }
+
+    override fun onLocationSettingSuccess(locationSettingsResponse: Task<LocationSettingsResponse>) {
+        Log.d(TAG, "onLocationSettingSuccess")
+    }
+
+    override fun onLocationSettingFail(exception: Exception) {
+        if (exception is ResolvableApiException){
+            // Location settings are not satisfied, but this can be fixed
+            // by showing the user a dialog.
+            try {
+                // Show the dialog by calling startResolutionForResult(),
+                // and check the result in onActivityResult().
+//                exception.startResolutionForResult(this@MainActivity, REQUEST_CHECK_SETTINGS)
+            } catch (sendEx: IntentSender.SendIntentException) {
+                // Ignore the error.
+            }
+        }
     }
 }
