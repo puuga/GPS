@@ -1,7 +1,7 @@
 package space.siwawesw.app.gps.model
 
-import android.databinding.ObservableDouble
-import android.databinding.ObservableFloat
+import androidx.databinding.ObservableDouble
+import androidx.databinding.ObservableFloat
 import android.location.Location
 
 data class Location (var latitude: ObservableDouble,

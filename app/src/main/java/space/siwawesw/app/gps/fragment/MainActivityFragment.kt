@@ -1,9 +1,9 @@
 package space.siwawesw.app.gps.fragment
 
-import android.databinding.DataBindingUtil
-import android.databinding.ObservableDouble
-import android.databinding.ObservableFloat
-import android.support.v4.app.Fragment
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ObservableDouble
+import androidx.databinding.ObservableFloat
+import androidx.fragment.app.Fragment
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View

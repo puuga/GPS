@@ -3,8 +3,8 @@ package space.siwawesw.app.gps.activity
 import android.Manifest
 import android.content.IntentSender
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
@@ -13,15 +13,12 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationSettingsResponse
 import com.google.android.gms.tasks.Task
 
-import kotlinx.android.synthetic.main.activity_main.*
 import space.siwawesw.app.gps.R
 import space.siwawesw.app.gps.util.LocationUtil
 import java.lang.Exception
-import com.google.android.gms.location.LocationServices
-import android.Manifest.permission
-import android.Manifest.permission.ACCESS_FINE_LOCATION
-import android.support.v4.app.ActivityCompat
+import androidx.core.app.ActivityCompat
 import android.content.pm.PackageManager
+import kotlinx.android.synthetic.main.activity_main.*
 import space.siwawesw.app.gps.fragment.MainActivityFragment
 
 
