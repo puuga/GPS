@@ -50,8 +50,8 @@ class LocationUtil private constructor() {
 
     private fun createLocationRequest(): LocationRequest {
         return LocationRequest().apply {
-            interval = 5000
-            fastestInterval = 1000
+            interval = 1000
+            fastestInterval = 500
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
     }
