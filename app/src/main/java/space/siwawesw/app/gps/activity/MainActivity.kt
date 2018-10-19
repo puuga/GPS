@@ -64,6 +64,9 @@ class MainActivity : AppCompatActivity(), LocationUtil.LocationUtilCallback, Loc
 
     override fun onResume() {
         super.onResume()
+
+        if (LocationUtil.instance.isRunning)
+            LocationUtil.instance.startLocationUpdates()
     }
 
     override fun onPause() {
